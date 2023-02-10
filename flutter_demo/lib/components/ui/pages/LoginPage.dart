@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_demo/firebase/auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -67,17 +70,25 @@ class _LoginPageState extends State<LoginPage> {
                   child: ElevatedButton(
                       onPressed: (() async {
                         try {
-                          // メール/パスワードでユーザー登録
-                          final FirebaseAuth auth = FirebaseAuth.instance;
-                          await auth
-                              .createUserWithEmailAndPassword(
-                                email: email,
-                                password: password,
-                              )
-                              .then((value) => {print(value)});
-                          // ユーザー登録に成功した場合
-                          // チャット画面に遷移＋ログイン画面を破棄
-
+                          await FirebaseAuthService()
+                              .createUserWithEmailAndPassword(email, password)
+                              .then((value) => {
+                                    setState(
+                                      () {
+                                        final snackBar = SnackBar(
+                                          content: const Text('ユーザー登録が完了しました'),
+                                          action: SnackBarAction(
+                                            label: 'Undo',
+                                            onPressed: () {
+                                              // Some code to undo the change.
+                                            },
+                                          ),
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBar);
+                                      },
+                                    )
+                                  });
                         } catch (e) {
                           // ユーザー登録に失敗した場合
                           setState(() {
@@ -86,6 +97,43 @@ class _LoginPageState extends State<LoginPage> {
                         }
                       }),
                       child: Text('ユーザ登録'))),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Center(
+                  child: ElevatedButton(
+                      onPressed: (() async {
+                        try {
+                          // メール/パスワードでユーザー登録
+                          FirebaseAuthService()
+                              .signInWithEmailAndPassword(email, password)
+                              .then((value) => {
+                                    print(value),
+                                    setState(() {
+                                      final snackBar = SnackBar(
+                                        content: const Text('ログイン成功'),
+                                        action: SnackBarAction(
+                                          label: 'Undo',
+                                          onPressed: () {
+                                            // Some code to undo the change.
+                                          },
+                                        ),
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                    })
+                                  });
+                          Timer(Duration(seconds: 2), (() {
+                            Navigator.of(context).pushNamed("/home");
+                          }));
+                        } catch (e) {
+                          // ユーザー登録に失敗した場合
+                          setState(() {
+                            infoText = "登録に失敗しました：${e.toString()}";
+                          });
+                        }
+                      }),
+                      child: Text('ログイン'))),
             ),
             Container(
               padding: EdgeInsets.all(8),

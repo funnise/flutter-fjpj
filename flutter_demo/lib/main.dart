@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_demo/components/ui/pages/LoginPage.dart';
+import 'package:flutter_demo/components/ui/pages/UserProfilePage.dart';
+import 'components/ui/pages/HomePage.dart';
 import 'firebase_options.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -25,7 +27,8 @@ class MyApp extends StatelessWidget {
       ),
       home: const LoginPage(),
       routes: {
-        '/home': ((context) => MyHomePage(title: 'Flutter Demo Home Page')),
+        '/home': ((context) => HomePage()),
+        '/profile': ((context) => UserProfilePage()),
       },
     );
   }
