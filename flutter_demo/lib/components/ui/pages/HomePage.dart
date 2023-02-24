@@ -13,17 +13,22 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-          child: Column(
-        children: [
-          ElevatedButton(onPressed: () {}, child: Text('チャットページ')),
-          ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed("/profile");
-              },
-              child: Text('プロフィール設定ページ')),
-        ],
-      )),
+      body: Container(
+        padding: const EdgeInsets.all(16.0),
+        child: Center(
+            child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(onPressed: () {}, child: Text('チャットページ')),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed("/profile");
+                },
+                child: Text('プロフィール設定ページ')),
+          ],
+        )),
+      ),
     );
   }
 }
