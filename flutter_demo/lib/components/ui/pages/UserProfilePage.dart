@@ -73,7 +73,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     ),
                     SwitchListTile(
                       title: const Text('性別'),
-                      value: isMan,
+                      value: false,
                       onChanged: (bool value) {
                         setState(() {});
                       },
@@ -143,11 +143,12 @@ class _UserProfilePageState extends State<UserProfilePage> {
             )),
           );
         }
-        return Container(
-            alignment: Alignment.center,
-            child: const CircularProgressIndicator(
-              color: Colors.green,
-            ));
+        return Scaffold(
+            body: Container(
+                alignment: Alignment.center,
+                child: const CircularProgressIndicator(
+                  color: Colors.green,
+                )));
       }),
     );
   }
