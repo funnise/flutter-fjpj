@@ -33,9 +33,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
         if (snapshot.connectionState == ConnectionState.done) {
           Map<String, dynamic> data =
               snapshot.data!.data() as Map<String, dynamic>;
-          print(data['email']);
-          print(data['name']);
-          print(data['phoneNumber']);
+
           return Scaffold(
             appBar: AppBar(actions: []),
             body: Center(
@@ -45,19 +43,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                          initialValue: data['name'],
-                          onChanged: (value) => {
-                                setState(() {
-                                  name = value;
-                                })
-                              },
-                          decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: '名前を入力してください')),
-                    ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(

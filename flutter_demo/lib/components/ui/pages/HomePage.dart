@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
+import '../../../firebase/index.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -26,6 +28,11 @@ class _HomePageState extends State<HomePage> {
                   Navigator.of(context).pushNamed("/profile");
                 },
                 child: Text('プロフィール設定ページ')),
+            ElevatedButton(
+                onPressed: () {
+                  auth.signOut();
+                },
+                child: Text('ログアウト')),
           ],
         )),
       ),

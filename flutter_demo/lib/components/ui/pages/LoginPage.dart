@@ -108,7 +108,6 @@ class _LoginPageState extends State<LoginPage> {
                           FirebaseAuthService()
                               .signInWithEmailAndPassword(email, password)
                               .then((value) => {
-                                    print(value),
                                     setState(() {
                                       final snackBar = SnackBar(
                                         content: const Text('ログイン成功'),
@@ -123,9 +122,6 @@ class _LoginPageState extends State<LoginPage> {
                                           .showSnackBar(snackBar);
                                     })
                                   });
-                          Timer(Duration(seconds: 2), (() {
-                            Navigator.of(context).pushNamed("/home");
-                          }));
                         } catch (e) {
                           // ユーザー登録に失敗した場合
                           setState(() {

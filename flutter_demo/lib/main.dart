@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_demo/components/ui/pages/LoginPage.dart';
 import 'package:flutter_demo/components/ui/pages/UserProfilePage.dart';
+import 'package:flutter_demo/firebase/index.dart';
+import 'components/ui/atoms/CircularProgress.dart';
 import 'components/ui/pages/HomePage.dart';
 import 'firebase_options.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +19,6 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -25,10 +27,22 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const LoginPage(),
+      home: StreamBuilder<User?>(
+          stream: auth.authStateChanges(),
+          builder: ((context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              print(snapshot.connectionState);
+              return const CircularProgress();
+            }
+            if (snapshot.hasData) {
+              print(snapshot.data);
+              return const HomePage();
+            }
+            return const LoginPage();
+          })),
       routes: {
-        '/home': ((context) => HomePage()),
-        '/profile': ((context) => UserProfilePage()),
+        '/home': ((context) => const HomePage()),
+        '/profile': ((context) => const UserProfilePage()),
       },
     );
   }
