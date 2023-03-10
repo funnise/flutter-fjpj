@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_demo/components/ui/pages/LoginPage.dart';
 import 'package:flutter_demo/components/ui/pages/UserProfilePage.dart';
+import 'package:flutter_demo/firebase/firestore.dart';
 import 'package:flutter_demo/firebase/index.dart';
+import 'package:flutter_demo/provider/CounterProvider.dart';
+import 'package:provider/provider.dart';
 import 'components/ui/atoms/CircularProgress.dart';
 import 'components/ui/pages/HomePage.dart';
 import 'firebase_options.dart';
@@ -22,28 +25,35 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<CountProvider>(
+          create: (context) => CountProvider(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: StreamBuilder<User?>(
+            stream: auth.authStateChanges(),
+            builder: ((context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgress();
+              }
+              if (snapshot.hasData) {
+                print(snapshot.data!.uid);
+                final String userId = snapshot.data!.uid;
+                return const HomePage();
+              }
+              return const LoginPage();
+            })),
+        routes: {
+          '/home': ((context) => const HomePage()),
+          '/profile': ((context) => const UserProfilePage()),
+        },
       ),
-      home: StreamBuilder<User?>(
-          stream: auth.authStateChanges(),
-          builder: ((context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              print(snapshot.connectionState);
-              return const CircularProgress();
-            }
-            if (snapshot.hasData) {
-              print(snapshot.data);
-              return const HomePage();
-            }
-            return const LoginPage();
-          })),
-      routes: {
-        '/home': ((context) => const HomePage()),
-        '/profile': ((context) => const UserProfilePage()),
-      },
     );
   }
 }

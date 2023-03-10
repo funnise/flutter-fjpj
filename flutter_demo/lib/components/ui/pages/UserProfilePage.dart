@@ -17,22 +17,31 @@ class _UserProfilePageState extends State<UserProfilePage> {
   String email = "";
   String name = "";
   String phoneNumber = "";
+  late Future<DocumentSnapshot<Map<String, dynamic>>> _data;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _data = FirebaseFirestoreService().getFirestoreProfile('123456');
+  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<DocumentSnapshot>(
-      future: FirebaseFirestoreService().getFirestoreProfile('123456'),
+      future: _data,
       builder: ((context, snapshot) {
+        print(snapshot);
         if (snapshot.hasError) {
           return Text("Something went wrong");
         }
-
         if (snapshot.hasData && !snapshot.data!.exists) {
           return Text("Document does not exist");
         }
         if (snapshot.connectionState == ConnectionState.done) {
           Map<String, dynamic> data =
               snapshot.data!.data() as Map<String, dynamic>;
+          print(data);
 
           return Scaffold(
             appBar: AppBar(actions: []),
@@ -43,6 +52,18 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                          initialValue: data['email'],
+                          onChanged: (value) => {
+                                setState(() {
+                                  email = value;
+                                })
+                              },
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder(), labelText: '名前')),
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
