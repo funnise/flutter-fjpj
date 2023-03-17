@@ -48,14 +48,20 @@ class MyApp extends StatelessWidget {
         home: StreamBuilder<User?>(
             stream: auth.authStateChanges(),
             builder: ((context, snapshot) {
-              final UserProvider userProvider =
-                  Provider.of<UserProvider>(context, listen: true);
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const CircularProgress();
               }
               if (snapshot.hasData) {
+                final UserProvider userProvider =
+                    Provider.of<UserProvider>(context, listen: false);
                 getUserData(snapshot.data?.uid ?? "").then((value) {
-                  userProvider.setUserId(snapshot.data?.uid ?? "");
+                  print(value.data());
+                  final data = value.data();
+                  userProvider.setUser(
+                      snapshot.data?.uid ?? "",
+                      data!["name"] ?? "",
+                      data["phoneNumber"] ?? "",
+                      data["email"] ?? "");
                 });
                 return const HomePage();
               }

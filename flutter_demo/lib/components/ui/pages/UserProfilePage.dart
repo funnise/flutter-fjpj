@@ -5,6 +5,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_demo/firebase/firestore.dart';
 import 'package:provider/provider.dart';
 
+import '../../../molde/user.dart';
 import '../../../provider/UserProvider.dart';
 
 class UserProfilePage extends StatefulWidget {
@@ -34,6 +35,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   Widget build(BuildContext context) {
     final UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: true);
+    final User user = userProvider.getUser();
     return FutureBuilder<DocumentSnapshot>(
       future: _data,
       builder: ((context, snapshot) {
@@ -58,7 +60,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
-                          initialValue: data['email'],
+                          initialValue: user.name,
                           onChanged: (value) => {
                                 setState(() {
                                   email = value;
@@ -70,7 +72,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
-                          initialValue: data['email'],
+                          initialValue: user.email,
                           onChanged: (value) => {
                                 setState(() {
                                   email = value;
@@ -80,17 +82,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
                               border: OutlineInputBorder(),
                               labelText: 'メールアドレス')),
                     ),
-                    SwitchListTile(
-                      title: const Text('性別'),
-                      value: false,
-                      onChanged: (bool value) {
-                        setState(() {});
-                      },
-                    ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
-                          initialValue: data['phoneNumber'],
+                          initialValue: user.phoneNumber,
                           onChanged: (value) => {
                                 setState(() {
                                   phoneNumber = value;
@@ -105,8 +100,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         child: ElevatedButton(
                           child: Text('更新する'),
                           onPressed: () async {
+                            print(name);
                             await FirebaseFirestoreService()
-                                .setFirestoreProile('123456', {
+                                .setFirestoreProile(user.userId, {
                                   "email": email,
                                   "phoneNumber": phoneNumber,
                                   "name": name,

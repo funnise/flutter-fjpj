@@ -15,4 +15,9 @@ class FirebaseFirestoreService {
       String userId) {
     return db.collection('users').doc(userId).get();
   }
+
+  Stream<DocumentSnapshot<Map<String, dynamic>>> listenFirestoreProfile(
+      String userId) {
+    return db.collection('users').doc(userId).snapshots();
+  }
 }

@@ -6,9 +6,13 @@ class UserProvider with ChangeNotifier {
   late String name = '';
   late String phoneNumber = '';
   late String email = '';
-  late User user;
-  void setUser() {
+  late User user = User(id, name, phoneNumber, email);
+  void setUser(String id, String name, String phoneNumber, String email) {
     user = User(id, name, phoneNumber, email);
+  }
+
+  User getUser() {
+    return user;
   }
 
   void setUserId(String _id) {
