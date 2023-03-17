@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -20,33 +19,24 @@ class _UserProfilePageState extends State<UserProfilePage> {
   String email = "";
   String name = "";
   String phoneNumber = "";
+
   late Future<DocumentSnapshot<Map<String, dynamic>>> _data;
 
   @override
   void initState() {
-    final UserProvider userProvider =
-        Provider.of<UserProvider>(context, listen: true);
-    // TODO: implement initState
     super.initState();
+    _data = FirebaseFirestoreService().getFirestoreProfile('123456');
   }
 
-  void init() {
-    final UserProvider userProvider =
-        Provider.of<UserProvider>(context, listen: true);
-    print(userProvider.getUserId());
-    _data = FirebaseFirestoreService()
-        .getFirestoreProfile(userProvider.getUserId());
-  }
+  void init() {}
 
   @override
   Widget build(BuildContext context) {
     final UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: true);
-    print(userProvider.getUserId());
     return FutureBuilder<DocumentSnapshot>(
       future: _data,
       builder: ((context, snapshot) {
-        print(snapshot);
         if (snapshot.hasError) {
           return Text("Something went wrong");
         }

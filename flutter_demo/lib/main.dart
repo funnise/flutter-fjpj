@@ -22,15 +22,16 @@ void main() async {
   runApp(MyApp());
 }
 
-Future<DocumentSnapshot<Map<String, dynamic>>> getUserData() async {
+Future<DocumentSnapshot<Map<String, dynamic>>> getUserData(String _id) async {
   final userDataSnapshot =
-      await FirebaseFirestoreService().getFirestoreProfile('123456');
+      await FirebaseFirestoreService().getFirestoreProfile(_id);
   return userDataSnapshot;
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -53,16 +54,16 @@ class MyApp extends StatelessWidget {
                 return const CircularProgress();
               }
               if (snapshot.hasData) {
-                getUserData().then((value) {});
-                final String userId = snapshot.data!.uid;
-                userProvider.setUserId(userId ?? "");
+                getUserData(snapshot.data?.uid ?? "").then((value) {
+                  userProvider.setUserId(snapshot.data?.uid ?? "");
+                });
                 return const HomePage();
               }
               return const LoginPage();
             })),
         routes: {
           '/home': ((context) => const HomePage()),
-          '/profile': ((context) => const UserProfilePage()),
+          '/profile': ((context) => UserProfilePage()),
         },
       ),
     );

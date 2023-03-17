@@ -16,20 +16,11 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-Future<DocumentSnapshot<Map<String, dynamic>>> getUserData(String _id) async {
-  final userDataSnapshot =
-      await FirebaseFirestoreService().getFirestoreProfile(_id);
-  return userDataSnapshot;
-}
-
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: true);
-    print(userProvider.getUserId());
-    getUserData(userProvider.getUserId())
-        .then((value) => {print(value.id), print(value.data())});
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.all(16.0),
@@ -41,7 +32,7 @@ class _HomePageState extends State<HomePage> {
             ElevatedButton(onPressed: () {}, child: Text('チャットページ')),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed("/profile");
+                  Navigator.of(context).pushNamed("/profile", arguments: {});
                 },
                 child: Text('プロフィール設定ページ')),
             ElevatedButton(
