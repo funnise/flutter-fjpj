@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_demo/components/ui/pages/LoginPage.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_demo/components/ui/pages/UserProfilePage.dart';
 import 'package:flutter_demo/firebase/firestore.dart';
 import 'package:flutter_demo/firebase/index.dart';
 import 'package:flutter_demo/provider/CounterProvider.dart';
+import 'package:flutter_demo/provider/UserProvider.dart';
 import 'package:provider/provider.dart';
 import 'components/ui/atoms/CircularProgress.dart';
 import 'components/ui/pages/HomePage.dart';
@@ -20,6 +22,12 @@ void main() async {
   runApp(MyApp());
 }
 
+Future<DocumentSnapshot<Map<String, dynamic>>> getUserData() async {
+  final userDataSnapshot =
+      await FirebaseFirestoreService().getFirestoreProfile('123456');
+  return userDataSnapshot;
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   // This widget is the root of your application.
@@ -27,9 +35,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<CountProvider>(
-          create: (context) => CountProvider(),
-        ),
+        ChangeNotifierProvider<UserProvider>(
+          create: (context) => UserProvider(),
+        )
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -39,12 +47,15 @@ class MyApp extends StatelessWidget {
         home: StreamBuilder<User?>(
             stream: auth.authStateChanges(),
             builder: ((context, snapshot) {
+              final UserProvider userProvider =
+                  Provider.of<UserProvider>(context, listen: true);
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const CircularProgress();
               }
               if (snapshot.hasData) {
-                print(snapshot.data!.uid);
+                getUserData().then((value) {});
                 final String userId = snapshot.data!.uid;
+                userProvider.setUserId(userId ?? "");
                 return const HomePage();
               }
               return const LoginPage();
@@ -57,6 +68,8 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+class CountProvider {}
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});

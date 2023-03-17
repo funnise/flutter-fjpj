@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_demo/firebase/firestore.dart';
+import 'package:provider/provider.dart';
+
+import '../../../provider/UserProvider.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({super.key});
@@ -21,13 +24,25 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   @override
   void initState() {
+    final UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: true);
     // TODO: implement initState
     super.initState();
-    _data = FirebaseFirestoreService().getFirestoreProfile('123456');
+  }
+
+  void init() {
+    final UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: true);
+    print(userProvider.getUserId());
+    _data = FirebaseFirestoreService()
+        .getFirestoreProfile(userProvider.getUserId());
   }
 
   @override
   Widget build(BuildContext context) {
+    final UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: true);
+    print(userProvider.getUserId());
     return FutureBuilder<DocumentSnapshot>(
       future: _data,
       builder: ((context, snapshot) {
@@ -41,8 +56,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
         if (snapshot.connectionState == ConnectionState.done) {
           Map<String, dynamic> data =
               snapshot.data!.data() as Map<String, dynamic>;
-          print(data);
-
           return Scaffold(
             appBar: AppBar(actions: []),
             body: Center(

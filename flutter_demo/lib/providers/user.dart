@@ -1,1 +1,0 @@
-// userId = auth uid 

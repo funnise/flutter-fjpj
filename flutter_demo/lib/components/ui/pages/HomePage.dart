@@ -1,11 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_demo/firebase/firestore.dart';
+import 'package:flutter_demo/molde/user.dart';
+import 'package:flutter_demo/provider/UserProvider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../firebase/index.dart';
-import '../../../provider/CounterProvider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,19 +16,20 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-Future<void> getUserData() async {
+Future<DocumentSnapshot<Map<String, dynamic>>> getUserData(String _id) async {
   final userDataSnapshot =
-      await FirebaseFirestoreService().getFirestoreProfile('123456');
-  print(userDataSnapshot.data()!["gender"]);
+      await FirebaseFirestoreService().getFirestoreProfile(_id);
+  return userDataSnapshot;
 }
 
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    final CountProvider countProvider =
-        Provider.of<CountProvider>(context, listen: true);
-    getUserData();
-    print(countProvider.getCounter());
+    final UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: true);
+    print(userProvider.getUserId());
+    getUserData(userProvider.getUserId())
+        .then((value) => {print(value.id), print(value.data())});
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.all(16.0),
@@ -46,11 +49,7 @@ class _HomePageState extends State<HomePage> {
                   auth.signOut();
                 },
                 child: Text('ログアウト')),
-            ElevatedButton(
-                onPressed: () {
-                  countProvider.incrementCounter();
-                },
-                child: Text('追加する')),
+            ElevatedButton(onPressed: () {}, child: Text('追加する')),
           ],
         )),
       ),
