@@ -7,3 +7,4 @@
 // });
 
 export {onAuth} from './triggers/onAuth';
+export {onFirestore} from './triggers/onFirestore';
