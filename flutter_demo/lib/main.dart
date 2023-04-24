@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_demo/components/ui/pages/ChartRoom.dart';
+import 'package:flutter_demo/components/ui/pages/FriendListPage.dart';
 import 'package:flutter_demo/components/ui/pages/LoginPage.dart';
 import 'package:flutter_demo/components/ui/pages/UserProfilePage.dart';
 import 'package:flutter_demo/firebase/firestore.dart';
@@ -55,7 +57,6 @@ class MyApp extends StatelessWidget {
                 final UserProvider userProvider =
                     Provider.of<UserProvider>(context, listen: false);
                 getUserData(snapshot.data?.uid ?? "").then((value) {
-                  print(value.data());
                   final data = value.data();
                   userProvider.setUser(
                       snapshot.data?.uid ?? "",
@@ -70,6 +71,8 @@ class MyApp extends StatelessWidget {
         routes: {
           '/home': ((context) => const HomePage()),
           '/profile': ((context) => UserProfilePage()),
+          '/chat': ((context) => ChatRoom()),
+          '/friends': ((context) => const FriendListPage()),
         },
       ),
     );

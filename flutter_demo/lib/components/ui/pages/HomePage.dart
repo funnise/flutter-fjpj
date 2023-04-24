@@ -29,12 +29,21 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton(onPressed: () {}, child: Text('チャットページ')),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed("/chat", arguments: {});
+                },
+                child: Text('チャットページ')),
             ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pushNamed("/profile", arguments: {});
                 },
                 child: Text('プロフィール設定ページ')),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed("/friends", arguments: {});
+                },
+                child: Text('友達一覧ページ')),
             ElevatedButton(
                 onPressed: () {
                   auth.signOut();
